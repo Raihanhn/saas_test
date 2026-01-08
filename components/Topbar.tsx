@@ -116,7 +116,9 @@ export default function Topbar({
             </button>
 
             {notifOpen && (
-              <div className="absolute right-0 mt-2 w-64 max-h-80 overflow-auto bg-white shadow-lg rounded-lg z-50">
+              <div className={`absolute right-0 mt-2 w-64 max-h-80 overflow-auto
+                 ${theme === "dark" ? "bg-gray-800" : "bg-white"}
+                shadow-lg rounded-lg z-50`}>
                 {notifications.length === 0 ? (
                   <p className="p-4 text-gray-500 text-sm">No notifications</p>
                 ) : (
