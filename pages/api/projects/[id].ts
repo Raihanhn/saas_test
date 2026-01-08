@@ -13,7 +13,8 @@ import Project from "@/modules/projects/project.model";
 
 connectDB();
 
-const uploadDir = path.join(process.cwd(), "uploads/projects");
+// const uploadDir = path.join(process.cwd(), "uploads/projects");
+const uploadDir = "/tmp/uploads/projects";
 if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
 
 const upload = multer({

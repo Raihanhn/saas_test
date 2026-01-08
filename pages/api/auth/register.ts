@@ -70,7 +70,9 @@ export default async function handler(
 
     let logoFileName: string | null = null;
     if (logoFile && logoFile.filepath) {
-      const uploadDir = path.join(process.cwd(), "uploads/logo");
+      // const uploadDir = path.join(process.cwd(), "uploads/logo");
+      const uploadDir = "/tmp/uploads/logo";
+
       await fsPromises.mkdir(uploadDir, { recursive: true });
 
       const ext = path.extname(logoFile.originalFilename || "");

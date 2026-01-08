@@ -54,7 +54,8 @@ export default async function handler(
         const originalName = file.originalFilename || "unknown.png";
         const safeName = originalName.replace(/[^a-zA-Z0-9.-]/g, "_");
         const fileName = `${Date.now()}-${safeName}`;
-        const uploadDir = path.join(process.cwd(), "public/uploads/profiles");
+        // const uploadDir = path.join(process.cwd(), "public/uploads/profiles");
+        const uploadDir = "/tmp/uploads/profiles";
         if (!fs.existsSync(uploadDir))
           fs.mkdirSync(uploadDir, { recursive: true });
 
