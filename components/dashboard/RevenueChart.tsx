@@ -63,9 +63,8 @@ export default function RevenueChart({
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      initial={false}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4 }}
       className="h-full w-full"
     >
       <h3 className={`font-semibold mb-4 ${chart.title}`}>
@@ -107,7 +106,7 @@ export default function RevenueChart({
             strokeWidth={3}
             dot={false}
             activeDot={{ r: 6 }}
-            animationDuration={800}
+           isAnimationActive={false}
           />
         </LineChart>
       </ResponsiveContainer>
