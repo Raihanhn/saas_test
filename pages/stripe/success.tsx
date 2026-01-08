@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { signIn } from "next-auth/react";
+import Image from "next/image";
 
 export default function StripeSuccess() {
   const router = useRouter();
@@ -55,11 +56,23 @@ export default function StripeSuccess() {
   }, [router.isReady, session_id]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+    <div className="min-h-screen  items-center justify-center bg-gray-50">
       {loading && (
-        <p className="text-lg text-gray-700">
-          Finalizing your subscription...
-        </p>
+         <>
+          {/* Next.js Image component for GIF */}
+          <div className="relative w-64 h-64 mb-6">
+            <Image
+              src="/agentic.gif"
+              alt="Loading..."
+              fill
+              style={{ objectFit: "contain" }}
+              priority
+            />
+          </div>
+          <p className="text-lg text-gray-700 text-center">
+            Finalizing your subscription...
+          </p>
+        </>
       )}
     </div>
   );
