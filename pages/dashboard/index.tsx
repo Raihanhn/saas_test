@@ -62,14 +62,33 @@ export default function DashboardPage() {
     fetchDashboardData();
   }, [status, session]);
 
-  if (status === "loading") {
+  if (status === "loading" || loading) {
+    // Full-page loader
     return (
-      <div className="h-screen flex items-center justify-center">
-        <svg
-          className="animate-spin h-10 w-10 text-emerald-600"
+      <DashboardLayout>
+        <div className="flex items-center justify-center h-[70vh]">
+         <svg
+          className="animate-spin h-12 w-12 text-emerald-600"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
           viewBox="0 0 24 24"
-        ></svg>
-      </div>
+        >
+          <circle
+            className="opacity-25"
+            cx="12"
+            cy="12"
+            r="10"
+            stroke="currentColor"
+            strokeWidth="4"
+          />
+          <path
+            className="opacity-75"
+            fill="currentColor"
+            d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+          />
+        </svg>
+        </div>
+      </DashboardLayout>
     );
   }
 
@@ -77,7 +96,7 @@ export default function DashboardPage() {
 
   return (
     <DashboardLayout>
-      <div className="p-6 space-y-6 h-screen  ">
+      <div className=" relative p-6 space-y-6 h-screen  ">
         {((session.user as any).role === "admin" && (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             <StatCard

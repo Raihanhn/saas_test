@@ -529,15 +529,38 @@ export default function ProjectsPage() {
         )}
 
         {role === "client" && (
-          <div className={`
+          <div
+            className={`
           ${theme === "dark" ? "bg-gray-800" : "bg-white"}
-           rounded-2xl shadow-sm  p-6`}>
+           rounded-2xl shadow-sm  p-6`}
+          >
             <h2 className="text-lg text-white font-semibold mb-6">
               My Projects
             </h2>
 
             {loading ? (
-              <p className="text-white">Loading projects...</p>
+              <div className="flex justify-center items-center h-40">
+                <svg
+                  className="animate-spin h-8 w-8 text-emerald-600"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  />
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                  />
+                </svg>
+              </div>
             ) : projects.length === 0 ? (
               <p className="text-white">No projects found.</p>
             ) : (
@@ -550,7 +573,11 @@ export default function ProjectsPage() {
                       key={p._id}
                       className={`rounded-2xl border
                         
-                         ${theme === "dark" ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200"}
+                         ${
+                           theme === "dark"
+                             ? "bg-gray-800 border-gray-700"
+                             : "bg-white border-gray-200"
+                         }
                          shadow-sm hover:shadow-md transition`}
                     >
                       <div className="px-6 py-4 flex items-start justify-between gap-4">
@@ -560,16 +587,28 @@ export default function ProjectsPage() {
                           </div>
 
                           <div>
-                            <h3 className={`text-lg font-semibold capitalize
-                              ${theme === "dark" ? "text-white" : " text-gray-800"}
-                              `}>
+                            <h3
+                              className={`text-lg font-semibold capitalize
+                              ${
+                                theme === "dark"
+                                  ? "text-white"
+                                  : " text-gray-800"
+                              }
+                              `}
+                            >
                               {p.name}
                             </h3>
 
-                            <div className={`flex items-center gap-2 capitalize font-semibold text-sm
+                            <div
+                              className={`flex items-center gap-2 capitalize font-semibold text-sm
                                
-                               ${theme === "dark" ? " text-white" : " text-gray-800"}
-                                mt-1`}>
+                               ${
+                                 theme === "dark"
+                                   ? " text-white"
+                                   : " text-gray-800"
+                               }
+                                mt-1`}
+                            >
                               <Users size={14} />
                               <span>{p.clientId?.name}</span>
                             </div>
@@ -587,11 +626,24 @@ export default function ProjectsPage() {
                             {p.status}
                           </span>
 
-                          <div className={`flex items-center gap-1
+                          <div
+                            className={`flex items-center gap-1
                              
-                             ${theme === "dark" ? "text-white" : " text-gray-900"}
-                              font-semibold`}>
-                            <DollarSign size={16} className={`${theme === "dark" ? "text-white" : " text-gray-900"}`} />
+                             ${
+                               theme === "dark"
+                                 ? "text-white"
+                                 : " text-gray-900"
+                             }
+                              font-semibold`}
+                          >
+                            <DollarSign
+                              size={16}
+                              className={`${
+                                theme === "dark"
+                                  ? "text-white"
+                                  : " text-gray-900"
+                              }`}
+                            />
                             {p.price?.toFixed(2) || "0.00"}
                           </div>
                         </div>
@@ -603,16 +655,42 @@ export default function ProjectsPage() {
                         <div className="space-y-4 text-sm text-gray-600">
                           <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
                             <div className="flex items-center gap-2">
-                              <Calendar size={14} className={`${theme === "dark" ? "text-white" : " text-gray-900"}`} />
-                              <span className={`text-sm ${theme === "dark" ? "text-white" : " text-gray-900"}`}>
+                              <Calendar
+                                size={14}
+                                className={`${
+                                  theme === "dark"
+                                    ? "text-white"
+                                    : " text-gray-900"
+                                }`}
+                              />
+                              <span
+                                className={`text-sm ${
+                                  theme === "dark"
+                                    ? "text-white"
+                                    : " text-gray-900"
+                                }`}
+                              >
                                 <strong>Start:</strong>{" "}
                                 {new Date(p.startDate).toLocaleDateString()}
                               </span>
                             </div>
 
                             <div className="flex items-center gap-2">
-                              <CalendarCheck size={14} className={`${theme === "dark" ? "text-white" : " text-gray-900"}`} />
-                              <span className={`text-sm ${theme === "dark" ? "text-white" : " text-gray-900"}`}>
+                              <CalendarCheck
+                                size={14}
+                                className={`${
+                                  theme === "dark"
+                                    ? "text-white"
+                                    : " text-gray-900"
+                                }`}
+                              />
+                              <span
+                                className={`text-sm ${
+                                  theme === "dark"
+                                    ? "text-white"
+                                    : " text-gray-900"
+                                }`}
+                              >
                                 <strong>End:</strong>{" "}
                                 {new Date(p.endDate).toLocaleDateString()}
                               </span>
@@ -622,10 +700,21 @@ export default function ProjectsPage() {
                           <div className="flex items-start gap-2">
                             <AlignLeft
                               size={14}
-                              className={` mt-0.5 ${theme === "dark" ? "text-white" : " text-gray-900"} `}
+                              className={` mt-0.5 ${
+                                theme === "dark"
+                                  ? "text-white"
+                                  : " text-gray-900"
+                              } `}
                             />
-                            <p className={`${theme === "dark" ? "text-white" : " text-gray-900"}`}>
-                              Description: {p.description || "No description provided."}
+                            <p
+                              className={`${
+                                theme === "dark"
+                                  ? "text-white"
+                                  : " text-gray-900"
+                              }`}
+                            >
+                              Description:{" "}
+                              {p.description || "No description provided."}
                             </p>
                           </div>
                         </div>
