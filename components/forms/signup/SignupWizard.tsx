@@ -12,6 +12,7 @@ import StepOnePersonal from "./StepOnePersonal";
 import StepTwoBusiness from "./StepTwoBusiness";
 import StepThreePlan from "./StepThreePlan";
 
+
 import { signupInitialState } from "./initialState";
 import { SignupFormData } from "./types";
 
@@ -19,6 +20,7 @@ export default function SignupWizard() {
   const [step, setStep] = useState(1);
   const [form, setForm] = useState<SignupFormData>(signupInitialState);
   const [userId, setUserId] = useState<string | null>(null);
+  const [registering, setRegistering] = useState(false);
 
   const router = useRouter();
 
@@ -37,6 +39,7 @@ export default function SignupWizard() {
     if (!isValid) return;
 
     if (step === 2 && !userId) {
+      setStep(3);
       if (!form.plan) form.plan = "free";
 
       try {
@@ -51,13 +54,15 @@ export default function SignupWizard() {
             }
           }
         }
-
+        setRegistering(true);
         const { data } = await axios.post("/api/auth/register", formData);
         setUserId(data.userId);
+        setRegistering(false);
       } catch (error: any) {
         alert(error.response?.data?.message || "Error creating user");
-        return;
+        setStep(2); // rollback if failed
       }
+    return
     }
 
     setStep((prev) => prev + 1);
@@ -187,12 +192,15 @@ export default function SignupWizard() {
                 )}
 
                 {step === 3 && (
-                  <button
-                    onClick={handleFinish}
-                    className="ml-auto px-6 py-2 transition transform hover:scale-105 cursor-pointer rounded-lg bg-emerald-600 text-white hover:bg-emerald-700"
-                  >
-                    Finish & Continue
-                  </button>
+                 <button
+                  onClick={handleFinish}
+                  disabled={registering}
+                  className={`ml-auto px-6 py-2 rounded-lg text-white cursor-pointer
+                    ${registering ? "bg-gray-400 cursor-not-allowed" : "bg-emerald-600 hover:bg-emerald-700"}
+                  `}
+                >
+                  {registering ? "Preparing your account..." : "Finish & Continue"}
+                </button>
                 )}
               </div>
               {/* Already have an account link */}

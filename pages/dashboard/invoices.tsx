@@ -115,27 +115,27 @@ export default function InvoicesPage() {
     return (
       <DashboardLayout>
         <div className="flex justify-center items-center h-full min-h-[300px]">
-        <svg
-          className="animate-spin h-12 w-12 text-emerald-600"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-        >
-          <circle
-            className="opacity-25"
-            cx="12"
-            cy="12"
-            r="10"
-            stroke="currentColor"
-            strokeWidth="4"
-          />
-          <path
-            className="opacity-75"
-            fill="currentColor"
-            d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
-          />
-        </svg>
-      </div>
+          <svg
+            className="animate-spin h-12 w-12 text-emerald-600"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <circle
+              className="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              strokeWidth="4"
+            />
+            <path
+              className="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+            />
+          </svg>
+        </div>
       </DashboardLayout>
     );
   }
@@ -143,28 +143,28 @@ export default function InvoicesPage() {
   if (loading) {
     return (
       <DashboardLayout>
-       <div className="flex justify-center items-center h-full min-h-[300px]">
-        <svg
-          className="animate-spin h-12 w-12 text-emerald-600"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-        >
-          <circle
-            className="opacity-25"
-            cx="12"
-            cy="12"
-            r="10"
-            stroke="currentColor"
-            strokeWidth="4"
-          />
-          <path
-            className="opacity-75"
-            fill="currentColor"
-            d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
-          />
-        </svg>
-      </div>
+        <div className="flex justify-center items-center h-full min-h-[300px]">
+          <svg
+            className="animate-spin h-12 w-12 text-emerald-600"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <circle
+              className="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              strokeWidth="4"
+            />
+            <path
+              className="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+            />
+          </svg>
+        </div>
       </DashboardLayout>
     );
   }
@@ -359,7 +359,7 @@ export default function InvoicesPage() {
                       theme === "dark"
                         ? "bg-gray-800 border-gray-800 hover:bg-gray-700 "
                         : "bg-white hover:bg-gray-200  border-gray-100"
-                         }`}
+                    }`}
                         >
                           <td className="px-6 py-4 font-medium capitalize">
                             {sub.plan}
@@ -373,15 +373,17 @@ export default function InvoicesPage() {
                           isActive
                             ? "bg-emerald-100 text-emerald-700"
                             : "bg-gray-200 text-gray-600"
-                           } `}
+                        } `}
                             >
                               {sub.status}
                             </span>
                           </td>
 
-                          <td className={`px-6 py-4
-                             ${theme === "dark" ? "bg-gray-800 text-white hover:bg-gray-700  " : "bg-white hover:bg-gray-200  text-gray-800 "}
-                             `}>
+                          <td
+                            className={`px-6 py-4
+                            
+                             `}
+                          >
                             {sub.currentPeriodEnd
                               ? new Date(
                                   sub.currentPeriodEnd
