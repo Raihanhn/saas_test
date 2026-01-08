@@ -380,7 +380,7 @@ export default function InvoicesPage() {
                           </td>
 
                           <td className={`px-6 py-4
-                             ${theme === "dark" ? "bg-gray-800 text-white " : "bg-white text-gray-800 "}
+                             ${theme === "dark" ? "bg-gray-800 text-white hover:bg-gray-700  " : "bg-white hover:bg-gray-200  text-gray-800 "}
                              `}>
                             {sub.currentPeriodEnd
                               ? new Date(

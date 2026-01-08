@@ -31,18 +31,11 @@ export default function StripeSuccess() {
           throw new Error("Login token not received");
         }
 
-        console.log(" Auto-login token received:", token);
-        const result = await signIn("token-login", {
+        await signIn("token-login", {
           token,
           redirect: true,
           callbackUrl: "/dashboard",
         });
-
-        if (result?.error) {
-          throw new Error(result.error);
-        }
-
-        console.log(" User auto-logged in successfully");
 
       } catch (err) {
         console.error("Auto-login error:", err);
@@ -56,19 +49,19 @@ export default function StripeSuccess() {
   }, [router.isReady, session_id]);
 
   return (
-    <div className="min-h-screen  items-center justify-center bg-gray-50">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50">
       {loading && (
-         <>
-          {/* Next.js Image component for GIF */}
+        <>
           <div className="relative w-64 h-64 mb-6">
             <Image
               src="/agentic.gif"
               alt="Loading..."
               fill
-              style={{ objectFit: "contain" }}
+              className="object-contain"
               priority
             />
           </div>
+
           <p className="text-lg text-gray-700 text-center">
             Finalizing your subscription...
           </p>
