@@ -25,7 +25,7 @@ const cardFade = {
 const stagger = {
   visible: {
     transition: {
-      staggerChildren: 0.18,
+      staggerChildren: 0.08,
     },
   },
 };

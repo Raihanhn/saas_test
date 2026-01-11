@@ -54,7 +54,7 @@ const fadeUpBig = {
 
 const stagger = {
   hidden: {},
-  visible: { transition: { staggerChildren: 0.15 } },
+  visible: { transition: { staggerChildren: 0.05 } },
 };
 
 export default function PricingPage() {
