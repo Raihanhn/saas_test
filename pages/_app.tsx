@@ -22,7 +22,7 @@ function AppWrapper({ Component, pageProps }: Pick<AppProps, "Component" | "page
 export default function App({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   return (
     <ThemeProvider>
-      <SessionProvider session={session}>
+      <SessionProvider session={session} refetchInterval={0}  refetchOnWindowFocus={false} >
         <Toaster position="top-center" reverseOrder={false} />
         <AppWrapper Component={Component} pageProps={pageProps} />
       </SessionProvider>

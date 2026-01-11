@@ -1,66 +1,69 @@
 //pages/dashboard/index.tsx
 "use client";
 
+import dynamic from "next/dynamic";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
 import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback  } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import StatCard from "@/components/dashboard/StatCard";
-import RevenueChart from "@/components/dashboard/RevenueChart";
-import OverviewChart from "@/components/dashboard/OverviewChart";
+const RevenueChart = dynamic(() => import("@/components/dashboard/RevenueChart"), { ssr: false });
+const OverviewChart = dynamic(() => import("@/components/dashboard/OverviewChart"), { ssr: false });
 import { useTheme } from "@/context/ThemeContext";
 
 export default function DashboardPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
+  const { theme } = useTheme();
   const [invoiceCount, setInvoiceCount] = useState(0);
   const [clientsCount, setClientsCount] = useState(0);
   const [projectsCount, setProjectsCount] = useState(0);
-  const [loading, setLoading] = useState(true);
   const [totalRevenue, setTotalRevenue] = useState(0);
   const [weeklyRevenue, setWeeklyRevenue] = useState<any[]>([]);
-  const { theme } = useTheme();
+  const [loading, setLoading] = useState(true);
+
+  const fetchDashboardData = useCallback(async () => {
+    if (!session?.user) return;
+
+    setLoading(true);
+    try {
+      const invoiceRes = await axios.get("/api/invoices/count");
+      setInvoiceCount(invoiceRes.data.total);
+
+      const revenueRes = await axios.get("/api/dashboard/revenue");
+      setTotalRevenue(revenueRes.data.total);
+      setWeeklyRevenue(revenueRes.data.weekly);
+
+      if ((session.user as any).role === "admin") {
+        const [clientsData, projectsData] = await Promise.all([
+          axios.get("/api/clients"),
+          axios.get("/api/projects"),
+        ]);
+
+        setClientsCount(clientsData.data.clients.length);
+        setProjectsCount(projectsData.data.projects.length);
+      } else {
+        const res = await axios.get("/api/projects");
+        const clientProjects = res.data.projects.filter(
+          (p: any) => p.clientId?._id === (session.user as any).id
+        );
+
+        setProjectsCount(clientProjects.length);
+        setClientsCount(0);
+      }
+    } catch (err) {
+      console.error("Dashboard error:", err);
+    } finally {
+      setLoading(false);
+    }
+  }, [session]);
 
   useEffect(() => {
-    if (status !== "authenticated" || !session?.user) return;
-
-    const fetchDashboardData = async () => {
-      setLoading(true);
-      try {
-        const invoiceRes = await axios.get("/api/invoices/count");
-        setInvoiceCount(invoiceRes.data.total);
-
-        const revenueRes = await axios.get("/api/dashboard/revenue");
-        setTotalRevenue(revenueRes.data.total);
-        setWeeklyRevenue(revenueRes.data.weekly);
-
-        if ((session.user as any).role === "admin") {
-          const [clientsData, projectsData] = await Promise.all([
-            axios.get("/api/clients"),
-            axios.get("/api/projects"),
-          ]);
-
-          setClientsCount(clientsData.data.clients.length);
-          setProjectsCount(projectsData.data.projects.length);
-        } else {
-          const res = await axios.get("/api/projects");
-          const clientProjects = res.data.projects.filter(
-            (p: any) => p.clientId?._id === (session.user as any).id
-          );
-
-          setProjectsCount(clientProjects.length);
-          setClientsCount(0);
-        }
-      } catch (err) {
-        console.error("Dashboard error:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchDashboardData();
-  }, [status, session]);
+    if (status === "authenticated" && loading) {
+      fetchDashboardData();
+    }
+  }, [status, fetchDashboardData, loading]);
 
   if (status === "loading" || loading) {
     // Full-page loader
