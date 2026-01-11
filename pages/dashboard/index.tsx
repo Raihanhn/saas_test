@@ -16,57 +16,123 @@ export default function DashboardPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const { theme } = useTheme();
-  const [invoiceCount, setInvoiceCount] = useState(0);
-  const [clientsCount, setClientsCount] = useState(0);
-  const [projectsCount, setProjectsCount] = useState(0);
-  const [totalRevenue, setTotalRevenue] = useState(0);
-  const [weeklyRevenue, setWeeklyRevenue] = useState<any[]>([]);
+  const [dashboardData, setDashboardData] = useState({
+  invoiceCount: 0,
+  clientsCount: 0,
+  projectsCount: 0,
+  totalRevenue: 0,
+  weeklyRevenue: [] as any[],
+});
   const [loading, setLoading] = useState(true);
 
-  const fetchDashboardData = useCallback(async () => {
-    if (!session?.user) return;
 
-    setLoading(true);
+
+//   useEffect(() => {
+//   if (status !== "authenticated") return;
+
+//   const fetchSummary = async () => {
+//     try {
+//       setLoading(true);
+//       const res = await axios.get("/api/dashboard/summary");
+//       setDashboardData(res.data);
+//     } catch (err) {
+//       console.error("Dashboard summary error:", err);
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   fetchSummary();
+// }, [status]);
+
+useEffect(() => {
+  if (status !== "authenticated") return;
+
+  let isMounted = true;
+
+  const fetchSummary = async (showLoader = true) => {
     try {
-      const invoiceRes = await axios.get("/api/invoices/count");
-      setInvoiceCount(invoiceRes.data.total);
-
-      const revenueRes = await axios.get("/api/dashboard/revenue");
-      setTotalRevenue(revenueRes.data.total);
-      setWeeklyRevenue(revenueRes.data.weekly);
-
-      if ((session.user as any).role === "admin") {
-        const [clientsData, projectsData] = await Promise.all([
-          axios.get("/api/clients"),
-          axios.get("/api/projects"),
-        ]);
-
-        setClientsCount(clientsData.data.clients.length);
-        setProjectsCount(projectsData.data.projects.length);
-      } else {
-        const res = await axios.get("/api/projects");
-        const clientProjects = res.data.projects.filter(
-          (p: any) => p.clientId?._id === (session.user as any).id
-        );
-
-        setProjectsCount(clientProjects.length);
-        setClientsCount(0);
-      }
+      if (showLoader) setLoading(true);
+      const res = await axios.get("/api/dashboard/summary");
+      if (isMounted) setDashboardData(res.data);
     } catch (err) {
-      console.error("Dashboard error:", err);
+      console.error("Dashboard summary error:", err);
     } finally {
-      setLoading(false);
+      if (isMounted && showLoader) setLoading(false);
     }
-  }, [session]);
+  };
 
-  useEffect(() => {
-    if (status === "authenticated" && loading) {
-      fetchDashboardData();
-    }
-  }, [status, fetchDashboardData, loading]);
+  // initial load → show loader
+  fetchSummary(true);
+
+  // refetch when tab gains focus → no full-page loader
+  const onFocus = () => fetchSummary(false);
+  window.addEventListener("focus", onFocus);
+
+  return () => {
+    isMounted = false;
+    window.removeEventListener("focus", onFocus);
+  };
+}, [status]);
+
+
+
+
+//   const fetchDashboardData = useCallback(async () => {
+//   if (!session?.user) return;
+
+//   setLoading(true);
+//   try {
+//     const invoiceRes = await axios.get("/api/invoices/count");
+//     const revenueRes = await axios.get("/api/dashboard/revenue");
+
+//     let clientsCount = 0;
+//     let projectsCount = 0;
+
+//     if ((session.user as any).role === "admin") {
+//       const [clientsData, projectsData] = await Promise.all([
+//         axios.get("/api/clients"),
+//         axios.get("/api/projects"),
+//       ]);
+
+//       clientsCount = clientsData.data.clients.length;
+//       projectsCount = projectsData.data.projects.length;
+//     } else {
+//       const res = await axios.get("/api/projects");
+//       const clientProjects = res.data.projects.filter(
+//         (p: any) => p.clientId?._id === (session.user as any).id
+//       );
+
+//       projectsCount = clientProjects.length;
+//     }
+
+//     setDashboardData({
+//       invoiceCount: invoiceRes.data.total,
+//       totalRevenue: revenueRes.data.total,
+//       weeklyRevenue: revenueRes.data.weekly,
+//       clientsCount,
+//       projectsCount,
+//     });
+//   } catch (err) {
+//     console.error("Dashboard error:", err);
+//   } finally {
+//     setLoading(false);
+//   }
+// }, [session]);
+
+
+
+  // useEffect(() => {
+  //   if (status === "authenticated" && loading) {
+  //     fetchDashboardData();
+  //   }
+  // }, [status, fetchDashboardData, loading]);
+
+
+
 
   if (status === "loading" || loading) {
-    // Full-page loader
+
     return (
       <DashboardLayout>
         <div className="flex items-center justify-center h-[70vh]">
@@ -104,22 +170,22 @@ export default function DashboardPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             <StatCard
               title="Active Clients"
-              value={loading ? "..." : clientsCount.toString()}
+              value={loading ? "..." : dashboardData.clientsCount.toString()}
               change="+4.2%"
             />
             <StatCard
               title="Total Projects"
-              value={loading ? "..." : projectsCount.toString()}
+              value={loading ? "..." : dashboardData.projectsCount.toString()}
               change="+2.1%"
             />
             <StatCard
               title="Total Revenue"
-              value={loading ? "..." : `$${totalRevenue.toLocaleString()}`}
+              value={loading ? "..." : `$${dashboardData.totalRevenue.toLocaleString()}`}
               change="+12.5%"
             />
             <StatCard
               title="Total Invoices"
-              value={loading ? "..." : invoiceCount.toString()}
+              value={loading ? "..." : dashboardData.invoiceCount.toString()}
               change="+3.1%"
             />
           </div>
@@ -127,17 +193,17 @@ export default function DashboardPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             <StatCard
               title="Total Projects"
-              value={loading ? "..." : projectsCount.toString()}
+              value={loading ? "..." : dashboardData.projectsCount.toString()}
               change="+2.1%"
             />
             <StatCard
               title="Total Expense"
-              value={loading ? "..." : `$${totalRevenue.toLocaleString()}`}
+              value={loading ? "..." : `$${dashboardData.totalRevenue.toLocaleString()}`}
               change="+12.5%"
             />
             <StatCard
               title="Total Invoices"
-              value={loading ? "..." : invoiceCount.toString()}
+              value={loading ? "..." : dashboardData.invoiceCount.toString()}
               change="+3.1%"
             />
           </div>
@@ -150,7 +216,7 @@ export default function DashboardPage() {
             }`}
           >
             <RevenueChart
-              data={weeklyRevenue}
+              data={dashboardData.weeklyRevenue}
               type={
                 (session.user as any).role === "admin" ? "revenue" : "expense"
               }
@@ -163,10 +229,10 @@ export default function DashboardPage() {
             }`}
           >
             <OverviewChart
-              clientsCount={clientsCount}
-              projectsCount={projectsCount}
-              totalRevenue={totalRevenue}
-              invoiceCount={invoiceCount}
+              clientsCount={dashboardData.clientsCount}
+              projectsCount={dashboardData.projectsCount}
+              totalRevenue={dashboardData.totalRevenue}
+              invoiceCount={dashboardData.invoiceCount}
               type={
                 (session.user as any).role === "admin" ? "revenue" : "expense"
               }
