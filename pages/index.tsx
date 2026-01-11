@@ -46,7 +46,7 @@ export default function HomePage() {
           whileInView="visible"
           viewport={{ once: true, amount: 0.3 }}
           variants={staggerChildren}
-          className="w-full max-w-7xl bg-white rounded-[28px] p-10"
+          className="w-full max-w-7xl  xl:max-w-[1400px]  2xl:max-w-[1500px] bg-white rounded-[28px] p-10"
         >
           {/* Navbar */}
           <motion.header

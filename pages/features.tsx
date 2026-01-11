@@ -9,6 +9,7 @@ import {
   CreditCard,
   BarChart3,
 } from "lucide-react";
+import Link from "next/link";
 
 /* ------------------ Animation Variants ------------------ */
 const textFade = {
@@ -217,13 +218,15 @@ export default function FeaturesPage() {
             Ready to simplify your workflow?
           </motion.p>
 
+           <Link href="/auth/register">
           <motion.button
             variants={textFade}
             transition={{ duration: 0.9, delay: 0.2 }}
-            className="bg-emerald-600 text-white px-8 py-3 rounded-full font-medium hover:bg-emerald-700 transition transform hover:scale-105"
+            className="bg-emerald-600 cursor-pointer text-white px-8 py-3 rounded-full font-medium hover:bg-emerald-700 transition transform hover:scale-105"
           >
             Get Started with Agentic
           </motion.button>
+          </Link>
         </motion.div>
       </div>
     </LandingLayout>
