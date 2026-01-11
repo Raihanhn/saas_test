@@ -123,12 +123,16 @@ export default function Topbar({
                   <p className="p-4 text-gray-500 text-sm">No notifications</p>
                 ) : (
                   notifications.map((n) => (
+                    <Link href="/dashboard/projects" key={n._id}>
                     <div
-                      key={n._id}
-                      className="border-b last:border-b-0 px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm"
+                      className={`border-b last:border-b-0 px-4 py-2
+                        
+                          ${theme === "dark" ? "hover:bg-gray-700" : "hover:bg-gray-100 "}
+                         cursor-pointer text-sm`}
                     >
                       {n.message}
                     </div>
+                    </Link>
                   ))
                 )}
               </div>

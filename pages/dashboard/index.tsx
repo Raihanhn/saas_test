@@ -4,7 +4,7 @@
 import dynamic from "next/dynamic";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
 import { useSession } from "next-auth/react";
-import { useEffect, useState, useCallback  } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import StatCard from "@/components/dashboard/StatCard";
@@ -24,26 +24,6 @@ export default function DashboardPage() {
   weeklyRevenue: [] as any[],
 });
   const [loading, setLoading] = useState(true);
-
-
-
-//   useEffect(() => {
-//   if (status !== "authenticated") return;
-
-//   const fetchSummary = async () => {
-//     try {
-//       setLoading(true);
-//       const res = await axios.get("/api/dashboard/summary");
-//       setDashboardData(res.data);
-//     } catch (err) {
-//       console.error("Dashboard summary error:", err);
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-
-//   fetchSummary();
-// }, [status]);
 
 useEffect(() => {
   if (status !== "authenticated") return;
@@ -74,62 +54,6 @@ useEffect(() => {
     window.removeEventListener("focus", onFocus);
   };
 }, [status]);
-
-
-
-
-//   const fetchDashboardData = useCallback(async () => {
-//   if (!session?.user) return;
-
-//   setLoading(true);
-//   try {
-//     const invoiceRes = await axios.get("/api/invoices/count");
-//     const revenueRes = await axios.get("/api/dashboard/revenue");
-
-//     let clientsCount = 0;
-//     let projectsCount = 0;
-
-//     if ((session.user as any).role === "admin") {
-//       const [clientsData, projectsData] = await Promise.all([
-//         axios.get("/api/clients"),
-//         axios.get("/api/projects"),
-//       ]);
-
-//       clientsCount = clientsData.data.clients.length;
-//       projectsCount = projectsData.data.projects.length;
-//     } else {
-//       const res = await axios.get("/api/projects");
-//       const clientProjects = res.data.projects.filter(
-//         (p: any) => p.clientId?._id === (session.user as any).id
-//       );
-
-//       projectsCount = clientProjects.length;
-//     }
-
-//     setDashboardData({
-//       invoiceCount: invoiceRes.data.total,
-//       totalRevenue: revenueRes.data.total,
-//       weeklyRevenue: revenueRes.data.weekly,
-//       clientsCount,
-//       projectsCount,
-//     });
-//   } catch (err) {
-//     console.error("Dashboard error:", err);
-//   } finally {
-//     setLoading(false);
-//   }
-// }, [session]);
-
-
-
-  // useEffect(() => {
-  //   if (status === "authenticated" && loading) {
-  //     fetchDashboardData();
-  //   }
-  // }, [status, fetchDashboardData, loading]);
-
-
-
 
   if (status === "loading" || loading) {
 
