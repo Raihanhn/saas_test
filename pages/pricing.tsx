@@ -52,10 +52,6 @@ const fadeUpBig = {
   visible: { opacity: 1, y: 0 },
 };
 
-const stagger = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.05 } },
-};
 
 export default function PricingPage() {
   return (
@@ -64,7 +60,7 @@ export default function PricingPage() {
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.3 }}
-        variants={stagger}
+        // variants={stagger}
         className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16"
       >
         {/* Hero */}
@@ -91,14 +87,14 @@ export default function PricingPage() {
 
         {/* Plan Cards */}
         <motion.div
-          variants={stagger}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
           className="grid grid-cols-1 md:grid-cols-3 gap-6"
         >
           {plans.map((plan, index) => (
             <motion.div
               key={plan.id}
-              variants={fadeUp}
-              transition={{ duration: 0.8, delay: index * 0.3 }}
               className="flex flex-col rounded-xl border p-6 shadow-lg hover:shadow-2xl transition bg-white"
             >
               <h3 className="text-xl font-bold mb-2">{plan.name}</h3>
@@ -114,13 +110,11 @@ export default function PricingPage() {
                 ))}
               </ul>
               {/* Button with extra latency */}
-              <motion.button
-                variants={fadeUp}
-                transition={{ duration: 0.8, delay: index * 0.3 + 0.4 }}
+              <button
                 className="w-full bg-emerald-600 text-white py-2 rounded-full font-medium hover:bg-emerald-700 transition transform hover:scale-105 cursor-pointer"
               >
                 Choose {plan.name}
-              </motion.button>
+              </button>
             </motion.div>
           ))}
         </motion.div>
@@ -128,7 +122,7 @@ export default function PricingPage() {
         {/* Optional CTA */}
         <motion.div
           variants={fadeUp}
-          transition={{ duration: 0.8, delay: 1 }}
+          transition={{ duration: 0.3, delay: 0.3 }}
           className="text-center mt-12"
         >
           <p className="text-gray-700 text-lg">

@@ -34,7 +34,7 @@ const fadeUpBig = {
 
 const staggerChildren = {
   hidden: {},
-  visible: { transition: { staggerChildren: 0.12 } },
+  visible: { transition: { staggerChildren: 0.05 } },
 };
 
 export default function HomePage() {

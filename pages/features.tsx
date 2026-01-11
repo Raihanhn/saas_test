@@ -22,13 +22,13 @@ const cardFade = {
   visible: { opacity: 1, y: 0, scale: 1 },
 };
 
-const stagger = {
-  visible: {
-    transition: {
-      staggerChildren: 0.08,
-    },
-  },
-};
+// const stagger = {
+//   visible: {
+//     transition: {
+//       staggerChildren: 0.08,
+//     },
+//   },
+// };
 
 /* ------------------ Features Data ------------------ */
 const features = [
@@ -80,7 +80,7 @@ export default function FeaturesPage() {
           whileInView="visible"
           viewport={{ once: true }}
           transition={{ duration: 1 }}
-          variants={stagger}
+          // variants={stagger}
           className="text-center max-w-3xl mx-auto mb-24"
         >
           <motion.h1
@@ -106,7 +106,7 @@ export default function FeaturesPage() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-120px" }}
-          variants={stagger}
+          // variants={stagger}
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
         >
           {features.map((feature, index) => {
@@ -114,10 +114,10 @@ export default function FeaturesPage() {
             return (
               <motion.div
                 key={feature.title}
-                variants={cardFade}
+                // variants={cardFade}
                 transition={{
                   duration: 0.9,
-                  delay: index * 0.15,
+                  // delay: index * 0.15,
                   ease: "easeOut",
                 }}
                 className="bg-white rounded-2xl border p-6 shadow-md hover:shadow-2xl transition group"
@@ -135,7 +135,7 @@ export default function FeaturesPage() {
 
                 <motion.h3
                   variants={textFade}
-                  transition={{ duration: 0.8, delay: 0.1 }}
+                  transition={{ duration: 0.8 }}
                   className="text-lg font-semibold text-gray-900 mb-2"
                 >
                   {feature.title}
@@ -158,7 +158,7 @@ export default function FeaturesPage() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-120px" }}
-          variants={stagger}
+          // variants={stagger}
           className="mt-28 grid grid-cols-1 md:grid-cols-3 gap-8"
         >
           {[
@@ -177,10 +177,9 @@ export default function FeaturesPage() {
           ].map((item, i) => (
             <motion.div
               key={i}
-              variants={cardFade}
+              // variants={cardFade}
               transition={{
-                duration: 1,
-                delay: i * 0.2,
+                duration: 0.8
               }}
               className="bg-white rounded-2xl border p-6 shadow-md hover:shadow-xl transition"
             >
@@ -207,12 +206,12 @@ export default function FeaturesPage() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          transition={{ duration: 1 }}
+          transition={{ duration: 0.8 }}
           className="text-center mt-28"
         >
           <motion.p
             variants={textFade}
-            transition={{ duration: 0.9 }}
+            transition={{ duration: 0.8 }}
             className="text-lg text-gray-700 mb-6"
           >
             Ready to simplify your workflow?
@@ -221,7 +220,7 @@ export default function FeaturesPage() {
            <Link href="/auth/register">
           <motion.button
             variants={textFade}
-            transition={{ duration: 0.9, delay: 0.2 }}
+            transition={{ duration: 0.8 }}
             className="bg-emerald-600 cursor-pointer text-white px-8 py-3 rounded-full font-medium hover:bg-emerald-700 transition transform hover:scale-105"
           >
             Get Started with Agentic
