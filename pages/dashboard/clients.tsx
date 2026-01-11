@@ -238,8 +238,8 @@ export default function ClientsPage() {
                           </button>
 
                           <div
-                            className={`absolute right-0 w-32 rounded-lg 
-                          shadow-lg opacity-0 group-hover:opacity-100
+                            className={`absolute flex right-5 -mt-8 cursor-pointer  top-full rounded-lg 
+                          shadow-lg opacity-0 group-hover:opacity-100 z-50
                            transition pointer-events-none group-hover:pointer-events-auto
                             ${theme === "dark" ? "bg-gray-800" : "bg-white"}
                            `}
@@ -249,7 +249,7 @@ export default function ClientsPage() {
                                 setEditingClient(client);
                                 setShowForm(true);
                               }}
-                              className={`block w-full text-left px-4 py-2
+                              className={`block w-full cursor-pointer text-sm px-4 py-2
                                  ${
                                    theme === "dark"
                                      ? "hover:bg-gray-600"
@@ -261,7 +261,7 @@ export default function ClientsPage() {
                             </button>
                             <button
                               onClick={() => handleDelete(client._id)}
-                              className={`block w-full text-left px-4 py-2
+                              className={`block w-full cursor-pointer text-sm px-4 py-2
                                  ${
                                    theme === "dark"
                                      ? "hover:bg-gray-600"
