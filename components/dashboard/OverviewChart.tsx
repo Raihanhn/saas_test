@@ -31,6 +31,7 @@ const pieTheme = {
       tooltipBg: "#F0F8CC",
       tooltipBorder: "#AFE033",
       tooltipText: "#3D5A00",
+      legendText: "#3D5A00",
     },
     expense: {
       title: "text-black",
@@ -39,12 +40,14 @@ const pieTheme = {
       tooltipBg: "#F0F8CC",
       tooltipBorder: "#AFE033",
       tooltipText: "#3D5A00",
+      legendText: "#3D5A00",
     },
   },
 
   dark: {
     revenue: {
       title: "text-white",
+      legendText: "#ECFDF5",
       centerText: "#E5E7EB",
       colors: ["#AFE033", "#7DBF1F", "#CFF38A", "#F8A23E"],
       tooltipBg: "#0B1F",
@@ -53,6 +56,7 @@ const pieTheme = {
     },
     expense: {
       title: "text-white",
+      legendText: "#ECFDF5",
       centerText: "#E5E7EB",
       colors: ["#CFF38A", "#AFE033", "#7DBF1F"],
       tooltipBg: "#0B1F14",
@@ -210,6 +214,20 @@ export default function OverviewChart({
           </Pie>
         </PieChart>
       </ResponsiveContainer>
+
+        {/* ===================== LEGEND ===================== */}
+      <div className="flex flex-wrap justify-center mt-4 gap-4">
+        {data.map((item, index) => (
+          <div key={index} className="flex items-center gap-2 text-sm">
+            <span
+              className="w-3 h-3 rounded-full"
+              style={{ backgroundColor: theme.colors[index % theme.colors.length] }}
+            />
+            <span style={{ color: theme.legendText }}>{item.name}</span>
+          </div>
+        ))}
+      </div>
+
     </motion.div>
   );
 }
