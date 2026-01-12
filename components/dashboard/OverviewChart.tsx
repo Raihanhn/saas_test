@@ -59,7 +59,7 @@ const pieTheme = {
       legendText: "#ECFDF5",
       centerText: "#E5E7EB",
       colors: ["#CFF38A", "#AFE033", "#7DBF1F"],
-      tooltipBg: "#0B1F14",
+      tooltipBg: "#0B8",
       tooltipBorder: "#AFE033",
       tooltipText: "#ECFDF5",
     },

@@ -27,10 +27,24 @@ export default async function handler(
     let projectsCount = 0;
     let invoiceCount = 0;
     let totalRevenue = 0;
-    const week = Array(7).fill(0);
+
+    // MONTH (Jan–Dec)
+    const monthly = Array(12).fill(0);
+
+
+      // YEAR (last 5 years)
+    const currentYear = new Date().getFullYear();
+    const yearlyMap: Record<number, number> = {};
+
+    for (let i = 0; i < 5; i++) {
+      yearlyMap[currentYear - i] = 0;
+    }
+
+    let invoices: any[] = [];
 
     // ================= ADMIN =================
-    if (role === "admin") {
+
+     if (role === "admin") {
       const projects = await Project.find({ createdBy: userId }).select("_id");
       const projectIds = projects.map((p) => p._id);
 
@@ -41,51 +55,59 @@ export default async function handler(
         createdBy: userId,
       });
 
-      const invoices = await Invoice.find({
+      invoices = await Invoice.find({
         projectId: { $in: projectIds },
         paidAt: { $exists: true, $ne: null },
       }).select("amount paidAt");
-
-      invoiceCount = invoices.length;
-
-      invoices.forEach((inv) => {
-        const amount = inv.amount || 0;
-        totalRevenue += amount;
-        const day = new Date(inv.paidAt).getDay();
-        week[day] += amount;
-      });
     }
 
+
     // ================= CLIENT =================
-    if (role === "client") {
+
+   if (role === "client") {
       const projects = await Project.find({ clientId: userId }).select("_id");
-      const projectIds = projects.map((p) => p._id);
+      projectsCount = projects.length;
 
-      projectsCount = projectIds.length;
-
-      const invoices = await Invoice.find({
+      invoices = await Invoice.find({
         clientId: userId,
         paidAt: { $exists: true, $ne: null },
       }).populate("projectId", "price");
-
-      invoiceCount = invoices.length;
-
-      invoices.forEach((inv) => {
-        const amount = inv.amount || inv.projectId?.price || 0;
-        totalRevenue += amount;
-        const day = new Date(inv.paidAt).getDay();
-        week[day] += amount;
-      });
     }
 
-    const weeklyRevenue = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map(
-      (day, index) => ({
-        day,
-        value: week[index],
-      })
-    );
+    invoiceCount = invoices.length;
 
-    // 🔥 optional cache (Vercel friendly)
+    invoices.forEach((inv) => {
+      const amount = inv.amount || inv.projectId?.price || 0;
+      const date = new Date(inv.paidAt);
+
+      totalRevenue += amount;
+
+      // MONTH
+      const monthIndex = date.getMonth(); // 0–11
+      monthly[monthIndex] += amount;
+
+      // YEAR
+      const year = date.getFullYear();
+      if (yearlyMap[year] !== undefined) {
+        yearlyMap[year] += amount;
+      }
+    });
+
+    const monthlyData = [
+      "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+      "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+    ].map((month, index) => ({
+      month,
+      value: monthly[index],
+    }));
+
+    const yearlyData = Object.keys(yearlyMap)
+      .sort()
+      .map((year) => ({
+        year,
+        value: yearlyMap[Number(year)],
+      }));
+
     res.setHeader("Cache-Control", "s-maxage=10, stale-while-revalidate=30");
 
     return res.status(200).json({
@@ -93,7 +115,8 @@ export default async function handler(
       clientsCount,
       projectsCount,
       totalRevenue,
-      weeklyRevenue,
+      monthlyData,
+      yearlyData,
       type: role === "admin" ? "revenue" : "expense",
     });
   } catch (err) {

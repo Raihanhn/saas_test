@@ -54,9 +54,13 @@ const chartTheme = {
 export default function RevenueChart({
   data,
   type = "revenue",
+  view,
+  onChangeView,
 }: {
-  data: { day: string; value: number }[];
+  data: any[];
   type?: "revenue" | "expense";
+  view: "monthly" | "yearly";
+  onChangeView: (v: "monthly" | "yearly") => void;
 }) {
   const { theme } = useTheme();
   const chart = chartTheme[theme][type];
@@ -67,16 +71,44 @@ export default function RevenueChart({
       animate={{ opacity: 1, y: 0 }}
       className="h-full w-full"
     >
-      <h3 className={`font-semibold mb-4 ${chart.title}`}>
-        {type === "revenue" ? "Revenue Overview" : "Expense Overview"}
-      </h3>
+      <div className="flex items-center justify-between mb-4">
+        <h3 className={`font-semibold ${chart.title}`}>
+          {type === "revenue" ? "Revenue Overview" : "Expense Overview"}
+        </h3>
+
+        <div className="flex gap-2">
+          <button
+            onClick={() => onChangeView("monthly")}
+            className={`px-3 py-1 text-sm rounded-md transition
+              ${
+                view === "monthly"
+                  ? "bg-emerald-600 text-white"
+                  : "bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-gray-200"
+              }`}
+          >
+            Monthly
+          </button>
+
+          <button
+            onClick={() => onChangeView("yearly")}
+            className={`px-3 py-1 text-sm rounded-md transition
+              ${
+                view === "yearly"
+                  ? "bg-emerald-600 text-white"
+                  : "bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-gray-200"
+              }`}
+          >
+            Yearly
+          </button>
+        </div>
+      </div>
 
       <ResponsiveContainer width="100%" height={250}>
         <LineChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke={chart.grid} />
 
           <XAxis
-            dataKey="day"
+            dataKey={view === "monthly" ? "month" : "year"}
             tick={{ fill: chart.axis, fontSize: 12 }}
             axisLine={{ stroke: chart.axis }}
             tickLine={{ stroke: chart.axis }}
@@ -96,7 +128,10 @@ export default function RevenueChart({
               color: chart.tooltipText,
             }}
             labelStyle={{ color: chart.tooltipText }}
-            formatter={(v: any) => `$${v.toLocaleString()}`}
+            formatter={(value) => {
+              if (typeof value !== "number") return "$0";
+              return `$${value.toLocaleString()}`;
+            }}
           />
 
           <Line
@@ -106,7 +141,7 @@ export default function RevenueChart({
             strokeWidth={3}
             dot={false}
             activeDot={{ r: 6 }}
-           isAnimationActive={false}
+            isAnimationActive={false}
           />
         </LineChart>
       </ResponsiveContainer>

@@ -8,8 +8,14 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import StatCard from "@/components/dashboard/StatCard";
-const RevenueChart = dynamic(() => import("@/components/dashboard/RevenueChart"), { ssr: false });
-const OverviewChart = dynamic(() => import("@/components/dashboard/OverviewChart"), { ssr: false });
+const RevenueChart = dynamic(
+  () => import("@/components/dashboard/RevenueChart"),
+  { ssr: false }
+);
+const OverviewChart = dynamic(
+  () => import("@/components/dashboard/OverviewChart"),
+  { ssr: false }
+);
 import { useTheme } from "@/context/ThemeContext";
 
 export default function DashboardPage() {
@@ -17,69 +23,72 @@ export default function DashboardPage() {
   const router = useRouter();
   const { theme } = useTheme();
   const [dashboardData, setDashboardData] = useState({
-  invoiceCount: 0,
-  clientsCount: 0,
-  projectsCount: 0,
-  totalRevenue: 0,
-  weeklyRevenue: [] as any[],
-});
+    invoiceCount: 0,
+    clientsCount: 0,
+    projectsCount: 0,
+    totalRevenue: 0,
+    monthlyData: [] as any[],
+    yearlyData: [] as any[],
+  });
+
+  const [chartView, setChartView] = useState<"monthly" | "yearly">("monthly");
+
   const [loading, setLoading] = useState(true);
 
-useEffect(() => {
-  if (status !== "authenticated") return;
+  useEffect(() => {
+    if (status !== "authenticated") return;
 
-  let isMounted = true;
+    let isMounted = true;
 
-  const fetchSummary = async (showLoader = true) => {
-    try {
-      if (showLoader) setLoading(true);
-      const res = await axios.get("/api/dashboard/summary");
-      if (isMounted) setDashboardData(res.data);
-    } catch (err) {
-      console.error("Dashboard summary error:", err);
-    } finally {
-      if (isMounted && showLoader) setLoading(false);
-    }
-  };
+    const fetchSummary = async (showLoader = true) => {
+      try {
+        if (showLoader) setLoading(true);
+        const res = await axios.get("/api/dashboard/summary");
+        if (isMounted) setDashboardData(res.data);
+      } catch (err) {
+        console.error("Dashboard summary error:", err);
+      } finally {
+        if (isMounted && showLoader) setLoading(false);
+      }
+    };
 
-  // initial load → show loader
-  fetchSummary(true);
+    // initial load → show loader
+    fetchSummary(true);
 
-  // refetch when tab gains focus → no full-page loader
-  const onFocus = () => fetchSummary(false);
-  window.addEventListener("focus", onFocus);
+    // refetch when tab gains focus → no full-page loader
+    const onFocus = () => fetchSummary(false);
+    window.addEventListener("focus", onFocus);
 
-  return () => {
-    isMounted = false;
-    window.removeEventListener("focus", onFocus);
-  };
-}, [status]);
+    return () => {
+      isMounted = false;
+      window.removeEventListener("focus", onFocus);
+    };
+  }, [status]);
 
   if (status === "loading" || loading) {
-
     return (
       <DashboardLayout>
         <div className="flex items-center justify-center h-[70vh]">
-         <svg
-          className="animate-spin h-12 w-12 text-emerald-600"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-        >
-          <circle
-            className="opacity-25"
-            cx="12"
-            cy="12"
-            r="10"
-            stroke="currentColor"
-            strokeWidth="4"
-          />
-          <path
-            className="opacity-75"
-            fill="currentColor"
-            d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
-          />
-        </svg>
+          <svg
+            className="animate-spin h-12 w-12 text-emerald-600"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <circle
+              className="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              strokeWidth="4"
+            />
+            <path
+              className="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+            />
+          </svg>
         </div>
       </DashboardLayout>
     );
@@ -104,7 +113,11 @@ useEffect(() => {
             />
             <StatCard
               title="Total Revenue"
-              value={loading ? "..." : `$${dashboardData.totalRevenue.toLocaleString()}`}
+              value={
+                loading
+                  ? "..."
+                  : `$${dashboardData.totalRevenue.toLocaleString()}`
+              }
               change="+12.5%"
             />
             <StatCard
@@ -122,7 +135,11 @@ useEffect(() => {
             />
             <StatCard
               title="Total Expense"
-              value={loading ? "..." : `$${dashboardData.totalRevenue.toLocaleString()}`}
+              value={
+                loading
+                  ? "..."
+                  : `$${dashboardData.totalRevenue.toLocaleString()}`
+              }
               change="+12.5%"
             />
             <StatCard
@@ -140,7 +157,13 @@ useEffect(() => {
             }`}
           >
             <RevenueChart
-              data={dashboardData.weeklyRevenue}
+              data={
+                chartView === "monthly"
+                  ? dashboardData.monthlyData
+                  : dashboardData.yearlyData
+              }
+              view={chartView}
+              onChangeView={setChartView}
               type={
                 (session.user as any).role === "admin" ? "revenue" : "expense"
               }
